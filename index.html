@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Will You Be My Valentine?</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #ffe6e9;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      position: relative;
+    }
+
+    .gif-container img {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      min-height: 60px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    #yesBtn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    #noBtn {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    /* Modal / Certificate Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      border: 3px dashed #ff4d6d;
+      text-align: center;
+      max-width: 350px;
+      width: 85%;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #888;
+    }
+
+    .certificate-btn {
+      margin-top: 15px;
+      background-color: #ff4d6d;
+      color: white;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="gif-container">
+      <img id="statusImg" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1bHgzYnF1bW56ZnlweWZ1OWI5eDVreHFmb24zaXByYXZqZ2V1eiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cLS1cf3xm38lR32L9n/giphy.gif" alt="Valentine Sticker">
+    </div>
+    
+    <h1 id="questionText">Will you be my Valentine?</h1>
+
+    <div class="btn-container">
+      <button id="yesBtn">Yes</button>
+      <button id="noBtn">No</button>
+    </div>
+
+    <button id="openCertBtn" class="certificate-btn">📜 Open Valentine Certificate</button>
+  </div>
+
+  <!-- Certificate Modal -->
+  <div id="certModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeModal">&times;</span>
+      <p style="font-size: 12px; color: #ff4d6d; font-weight: bold;">OFFICIAL DOCUMENT</p>
+      <h2 style="margin: 10px 0; color: #333;">Certificate of Valentine Partnership</h2>
+      <p style="font-size: 13px; color: #555; margin-bottom: 15px;">
+        This certifies that you have officially and unconditionally agreed to be my Valentine for 2026 and forever!
+      </p>
+      <p style="font-size: 11px; color: #888; margin-bottom: 15px;">
+        * Terms & Conditions: Unlimited kisses, snacks, cuddles, and endless love. Strictly non-refundable.
+      </p>
+      <div style="border-top: 1px solid #ccc; padding-top: 10px; font-weight: bold; color: #ff4d6d;">
+        Signed with Love ❤️
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const questionText = document.getElementById('questionText');
+    const statusImg = document.getElementById('statusImg');
+    const openCertBtn = document.getElementById('openCertBtn');
+    const certModal = document.getElementById('certModal');
+    const closeModal = document.getElementById('closeModal');
+
+    // No button response texts & images
+    const noResponses = [
+      { text: "Are you sure? 🥺", img: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnZ5OHM4Y2plZHJ6eWRueDhrYndzcWRjZnRuaG82OHUxb3BhdXQ4diZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L952342pdvCA0/giphy.gif" },
+      { text: "Don't do this to me... 💔", img: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZkZjJrdWRmNnVraTJwbm5mNXBvdTBscWVvYzg2dzdhaWNsdHFpOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ROF8OQvDmxytW/giphy.gif" },
+      { text: "You're breaking my heart! 😭", img: "https://media.giphy.com/media/26feZomC1aebmGjK0/giphy.gif" },
+      { text: "I'm gonna cry... 🥺", img: "https://media.giphy.com/media/d22UJ4q3wI1m8/giphy.gif" }
+    ];
+
+    let noCount = 0;
+    let yesScale = 1;
+
+    noBtn.addEventListener('click', () => {
+      if (noCount < noResponses.length) {
+        noBtn.innerText = noResponses[noCount].text;
+        statusImg.src = noResponses[noCount].img;
+        noCount++;
+      } else {
+        noBtn.innerText = "Please say Yes! 🥺";
+      }
+
+      // "Yes" বাটনটি ধীরে ধীরে বড় হবে
+      yesScale += 0.35;
+      yesBtn.style.transform = `scale(${yesScale})`;
+    });
+
+    yesBtn.addEventListener('click', () => {
+      questionText.innerText = "Yayyy!! :3 💕";
+      statusImg.src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2dwdDFtbWhxd3lybGN1c3R5MmR2aXpzeGV3cnZxdm1pOHd2dHBybSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MDJ9IbxxvDUQM/giphy.gif";
+      
+      // বাটনগুলো লুকিয়ে সার্টিফিকেট খোলার বাটন দেখানো হবে
+      document.querySelector('.btn-container').style.display = 'none';
+      openCertBtn.style.display = 'inline-block';
+    });
+
+    openCertBtn.addEventListener('click', () => {
+      certModal.style.display = 'flex';
+    });
+
+    closeModal.addEventListener('click', () => {
+      certModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target === certModal) {
+        certModal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
